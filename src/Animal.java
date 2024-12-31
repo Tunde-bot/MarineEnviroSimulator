@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 
 public abstract class Animal extends JPanel{
     protected boolean extinct;

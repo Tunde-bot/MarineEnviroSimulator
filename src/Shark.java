@@ -3,15 +3,24 @@ import java.awt.*;
 
 public class Shark extends Animal{
     Image image = Toolkit.getDefaultToolkit().getImage("shark.png");
-    Image newImage = image.getScaledInstance(250, 250, Image.SCALE_DEFAULT);
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(newImage, 375, 50, this);
-    }
+    Image newImage = image.getScaledInstance(100, 100, Image.SCALE_DEFAULT);
 
     public Shark(){this.population = 10;
-        JLabel label = new JLabel("Shark");
+        GridBagLayout layout = new GridBagLayout();
+        this.setLayout(layout);
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JLabel picLabel = new JLabel(new ImageIcon(newImage));
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        layout.setConstraints(picLabel, gbc);
+        add(picLabel);
+
+        this.population = 10;
+        JLabel label = new JLabel("Shark\nPopulation: " + getPopulation());
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        layout.setConstraints(label, gbc);
         add(label);
     }
 
