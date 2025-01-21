@@ -1,11 +1,25 @@
-import javax.swing.*;
-import java.awt.*;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+
+
 
 public class Fish extends Animal{
-    Image image = Toolkit.getDefaultToolkit().getImage("fish.png");
-    Image newImage = image.getScaledInstance(80, 90, Image.SCALE_DEFAULT);
+    Image image = new Image("fish.png");
+    //Image newImage = image.getScaledInstance(80, 90, Image.SCALE_DEFAULT);
+    ImageView img = new ImageView();
 
     public Fish(){
+        GridPane layout = new GridPane();
+        Label label = new Label("Fish");
+        this.getChildren().add(label);
+
+        img.setFitHeight(180);
+        img.setFitWidth(160);
+        img.setImage(image);
+        this.getChildren().add(img);
+        /**
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -22,12 +36,12 @@ public class Fish extends Animal{
         gbc.gridy = 0;
         layout.setConstraints(label, gbc);
         add(label);
+         **/
 
     }
 
     public Fish(int population){this.population = population;
-        JLabel label = new JLabel("Fish");
-        add(label);
+        Label label = new Label("Fish");
     }
 
     public int getPopulation(){return population;}

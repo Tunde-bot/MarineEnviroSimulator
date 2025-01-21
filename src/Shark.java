@@ -1,11 +1,28 @@
-import javax.swing.*;
-import java.awt.*;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+
+
 
 public class Shark extends Animal{
-    Image image = Toolkit.getDefaultToolkit().getImage("shark.png");
-    Image newImage = image.getScaledInstance(100, 100, Image.SCALE_DEFAULT);
+    Image image = new Image("shark.png");
+    //Image newImage = image.getScaledInstance(100, 100, Image.SCALE_DEFAULT);
+    ImageView img = new ImageView();
 
-    public Shark(){this.population = 10;
+    public Shark(){
+        GridPane layout = new GridPane();
+        Label label = new Label("Shark");
+        this.getChildren().add(label);
+
+        img.setFitHeight(180);
+        img.setFitWidth(160);
+        img.setImage(image);
+        this.getChildren().add(img);
+
+        /**
+        this.population = 10;
         GridBagLayout layout = new GridBagLayout();
         this.setLayout(layout);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -22,11 +39,12 @@ public class Shark extends Animal{
         gbc.gridy = 0;
         layout.setConstraints(label, gbc);
         add(label);
+         **/
     }
 
     public Shark(int population){this.population = population;
-        JLabel label = new JLabel("Shark");
-        add(label);
+        //JLabel label = new JLabel("Shark");
+        //add(label);
     }
 
     public int getPopulation(){return population;}

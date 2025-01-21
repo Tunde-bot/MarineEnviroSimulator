@@ -1,6 +1,8 @@
-import javax.swing.*;
+import javafx.scene.layout.Pane;
 
-public abstract class Animal extends JPanel{
+//import javax.swing.*;
+
+public abstract class Animal extends Pane {
     protected boolean extinct;
     protected int population;
     public abstract int getPopulation();
