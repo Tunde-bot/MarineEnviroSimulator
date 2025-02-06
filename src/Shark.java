@@ -1,8 +1,8 @@
-import javafx.geometry.Insets;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+
 
 
 
@@ -12,41 +12,21 @@ public class Shark extends Animal{
     ImageView img = new ImageView();
 
     public Shark(){
-        GridPane layout = new GridPane();
-        Label label = new Label("Shark");
+        population = new SimpleStringProperty("10");
+        Label label = new Label();
+        label.textProperty().bind(population);
+        this.getChildren().add(new Label("\nShark"));
         this.getChildren().add(label);
 
-        img.setFitHeight(180);
-        img.setFitWidth(160);
+        img.setFitHeight(80);
+        img.setFitWidth(60);
         img.setImage(image);
         this.getChildren().add(img);
-
-        /**
-        this.population = 10;
-        GridBagLayout layout = new GridBagLayout();
-        this.setLayout(layout);
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        JLabel picLabel = new JLabel(new ImageIcon(newImage));
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        layout.setConstraints(picLabel, gbc);
-        add(picLabel);
-
-        this.population = 10;
-        JLabel label = new JLabel("Shark\nPopulation: " + getPopulation());
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        layout.setConstraints(label, gbc);
-        add(label);
-         **/
     }
 
-    public Shark(int population){this.population = population;
-        //JLabel label = new JLabel("Shark");
-        //add(label);
-    }
+    public Shark(int population){this.population.set(Integer.toString(population));}
 
-    public int getPopulation(){return population;}
-    public void setPopulation(int population){this.population = population;}
+    public int getPopulation(){
+        return Integer.parseInt(population.get());}
+    public void setPopulation(int population){this.population.set(Integer.toString(population));}
 }
