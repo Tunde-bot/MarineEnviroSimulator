@@ -18,19 +18,28 @@ public class Main extends Application{
     static String ecosystem = "OceanicLocation";
     static Animal fish = new Fish();
     static Animal shark = new Shark();
+    static Animal kelp = new Kelp();
+    static Animal otter = new Otter();
+    static Animal urchin = new Urchin();
     static Button run = new Button("Run");
     static TextField days = new TextField();
     int screenHeight = 1000;
     int screenWidth = 1000;
-
+    final int YEARDAYS =365;
+    private int day = 0;
+    
     @Override
     public void start(Stage stage){
-        GridPane layout = new GridPane(3,3);
+        GridPane layout = new GridPane();
         layout.setPadding(new Insets(screenHeight/10,screenWidth/10,screenHeight/10,screenWidth/10));
 
         layout.add(fish,0,2);
         layout.add(shark,0,1);
         layout.add(run,0,3);
+        layout.add(kelp,1,1);
+        layout.add(otter, 1,2);
+        layout.add(urchin, 1,3);
+
         UnaryOperator<TextFormatter.Change> integerFilter = change -> {
             String newText = change.getControlNewText();
             if (newText.matches("-?([1-9][0-9]*)?")) {
@@ -55,32 +64,53 @@ public class Main extends Application{
         stage.setScene(scene);
         stage.show();
     }
+
     public static void main(String[] args){
         launch(args);
-        /**JFrame frame = new JFrame(ecosystem);
-        GridLayout layout = new GridLayout();
-        frame.setLayout(layout);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.setSize(1000, 1000);
-        frame.add(fish);
-        frame.add(shark);
-
-        frame.setVisible(true);
-         **/
     }
 
     private void runDays(int days) {
-        int day = 0;
-        while (day < days) {
+        int otterDeathRate;
+        int daysTillOtterDeath;
+        int otterBirthRate;
+        int daysTillOtterBirth;
+        int kelpBirthRate ;
+        int kelpDeathRate;
+        int newOtterPopulation;
+        int newKelpPopulation;
+        int newUrchinPopulation;
+        daysTillOtterDeath = (YEARDAYS*16)/(otter.getPopulation());
+        daysTillOtterBirth = (16*2*YEARDAYS)/(otter.getPopulation());
+        int destination = day+days;
+        while (day < destination) {
            fish.setPopulation(fish.getPopulation()-(shark.getPopulation()*10));
-           day++;
+           otterDeathRate = (otter.getPopulation())/(YEARDAYS*16);
+
+           otterBirthRate = (otter.getPopulation()*14)/(16*2*YEARDAYS);
+
+           kelpBirthRate = (2*kelp.getPopulation()*50)/YEARDAYS;
+           kelpDeathRate = (kelp.getPopulation())/365;
+
+           newOtterPopulation = otter.getPopulation()+otterBirthRate-otterDeathRate;
+           if(((daysTillOtterBirth!=0)&&(day%daysTillOtterBirth)==0)){
+                newOtterPopulation = otter.getPopulation()+1;
+                daysTillOtterBirth = (YEARDAYS*16)/(otter.getPopulation());}
+           if(((daysTillOtterDeath!=0)&&(day%daysTillOtterDeath)==0)){
+                newOtterPopulation = otter.getPopulation()-1;
+                daysTillOtterDeath = (YEARDAYS*16)/(otter.getPopulation());}
+
+           newUrchinPopulation = urchin.getPopulation()-(otter.getPopulation()*50);
+
+           newKelpPopulation = kelp.getPopulation()+kelpBirthRate-kelpDeathRate-(urchin.getPopulation()/16);
+
            if(day%10 == 0){
                shark.setPopulation(shark.getPopulation()-1);
            }
+           kelp.setPopulation(newKelpPopulation);
+           urchin.setPopulation(newUrchinPopulation);
+           otter.setPopulation(newOtterPopulation);
+            day++;
         }
         System.out.println(fish.getPopulation()+"\n"+shark.getPopulation());
     }
-
-
 }
