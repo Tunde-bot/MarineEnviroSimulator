@@ -8,16 +8,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 
 import java.util.function.UnaryOperator;
 
 public class Main extends Application{
-    static String ecosystem = "OceanicLocation";
-    static Animal fish = new Fish();
-    static Animal shark = new Shark();
     static Animal kelp = new Kelp();
     static Animal otter = new Otter();
     static Animal urchin = new Urchin();
@@ -33,12 +37,6 @@ public class Main extends Application{
         GridPane layout = new GridPane();
         layout.setPadding(new Insets(screenHeight/10,screenWidth/10,screenHeight/10,screenWidth/10));
 
-        layout.add(fish,0,2);
-        layout.add(shark,0,1);
-        layout.add(run,0,3);
-        layout.add(kelp,1,1);
-        layout.add(otter, 1,2);
-        layout.add(urchin, 1,3);
 
         UnaryOperator<TextFormatter.Change> integerFilter = change -> {
             String newText = change.getControlNewText();
@@ -49,7 +47,13 @@ public class Main extends Application{
         };
 
         days.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), null, integerFilter));
-        layout.add(days,0,4);
+
+        layout.add(days,0,4,2,1);
+        layout.add(run,0,5);
+        layout.add(kelp,0,1);
+        layout.add(otter, 0,2);
+        layout.add(urchin, 0,3);
+
         run.setOnAction(new EventHandler<ActionEvent>()  {
             @Override
             public void handle(ActionEvent event) {
@@ -60,14 +64,16 @@ public class Main extends Application{
 
         Scene scene = new Scene(layout, 1000,1000);
 
+        Stop[] gradientColors = new Stop[] { new Stop(0, Color.LIGHTBLUE), new Stop(1, Color.LIGHTGREEN)};
+        LinearGradient backGradient = new LinearGradient(500, 0, 500, 1000, false, CycleMethod.REFLECT, gradientColors);
+        layout.setBackground(new Background(new BackgroundFill(backGradient, CornerRadii.EMPTY, Insets.EMPTY)));
+
         stage.setTitle("Marine Environment");
         stage.setScene(scene);
         stage.show();
     }
 
-    public static void main(String[] args){
-        launch(args);
-    }
+    public static void main(String[] args){launch(args);}
 
     private void runDays(int days) {
         int otterDeathRate;
@@ -83,19 +89,17 @@ public class Main extends Application{
         daysTillOtterBirth = (16*2*YEARDAYS)/(otter.getPopulation());
         int destination = day+days;
         while (day < destination) {
-           fish.setPopulation(fish.getPopulation()-(shark.getPopulation()*10));
            otterDeathRate = (otter.getPopulation())/(YEARDAYS*16);
-
            otterBirthRate = (otter.getPopulation()*14)/(16*2*YEARDAYS);
 
            kelpBirthRate = (2*kelp.getPopulation()*50)/YEARDAYS;
            kelpDeathRate = (kelp.getPopulation())/365;
 
            newOtterPopulation = otter.getPopulation()+otterBirthRate-otterDeathRate;
-           if(((daysTillOtterBirth!=0)&&(day%daysTillOtterBirth)==0)){
+           if(((otterBirthRate==0)&&(daysTillOtterBirth==0))){
                 newOtterPopulation = otter.getPopulation()+1;
                 daysTillOtterBirth = (YEARDAYS*16)/(otter.getPopulation());}
-           if(((daysTillOtterDeath!=0)&&(day%daysTillOtterDeath)==0)){
+           if((otterDeathRate==0)&&(daysTillOtterDeath==0)){
                 newOtterPopulation = otter.getPopulation()-1;
                 daysTillOtterDeath = (YEARDAYS*16)/(otter.getPopulation());}
 
@@ -103,14 +107,13 @@ public class Main extends Application{
 
            newKelpPopulation = kelp.getPopulation()+kelpBirthRate-kelpDeathRate-(urchin.getPopulation()/16);
 
-           if(day%10 == 0){
-               shark.setPopulation(shark.getPopulation()-1);
-           }
            kelp.setPopulation(newKelpPopulation);
            urchin.setPopulation(newUrchinPopulation);
            otter.setPopulation(newOtterPopulation);
             day++;
+            daysTillOtterDeath--;
+            daysTillOtterBirth--;
         }
-        System.out.println(fish.getPopulation()+"\n"+shark.getPopulation());
+
     }
 }
